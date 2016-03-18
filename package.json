@@ -1,0 +1,14 @@
+{
+  "name": "dear-reader-server",
+  "version": "0.0.1",
+  "description": "Dear Reader Server tracks users across multiple sites and encourages them to donate to the Dear Reader partners",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jason Norwood-Young <jason@10layer.com>",
+  "license": "MIT",
+  "dependencies": {
+    "restify": "^4.0.4"
+  }
+}
