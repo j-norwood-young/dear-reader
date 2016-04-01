@@ -9,5 +9,6 @@ module.exports = {
 	admin: {
 		username: "admin",
 		password: "password"
-	}
+	},
+	url: "http://localhost:8080",
 };

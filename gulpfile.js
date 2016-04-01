@@ -8,6 +8,8 @@ var watch = require('gulp-watch');
 var prefix = require('gulp-autoprefixer');
 var browserify = require('gulp-browserify');
 var uglify = require('gulp-uglify');
+var replace = require('gulp-replace');
+var config = require("./config.js");
 
 var jsInputDir = 'assets/js/**/*.js';
 var lessInputDir = 'assets/less/**/*.less';
@@ -32,6 +34,7 @@ gulp.task('css', function() {
 gulp.task('js', function() {
 	return gulp.src(jsInputFile)
 		.pipe(browserify({ insertGlobals: true }))
+		.pipe(replace('[url]', config.url))
 		.pipe(rename(projectName + ".js"))
 		.pipe(gulp.dest(buildDir + jsOutputDir))
 		.pipe(uglify())

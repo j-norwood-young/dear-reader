@@ -1,5 +1,5 @@
 (function() {
-	var apiurl = "http://localhost:8080";
+	var apiurl = "[url]";
 	var withinviewport = require("withinviewport");
 
 	WebFontConfig = {
@@ -18,7 +18,7 @@
 	var cssLoader=document.createElement("link");
 	cssLoader.setAttribute("rel", "stylesheet");
 	cssLoader.setAttribute("type", "text/css");
-	cssLoader.setAttribute("href", "http://dearreaderserver.dev/public/css/dearreader.css");
+	cssLoader.setAttribute("href", apiurl + "/public/css/dearreader.css");
 	document.body.appendChild(cssLoader);
 
 	function hasClass(el, className) { //http://jaketrent.com/post/addremove-classes-raw-javascript/

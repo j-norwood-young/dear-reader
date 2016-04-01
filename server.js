@@ -85,6 +85,10 @@ server.use(
 	}
 );
 
+server.get(/\/public\/?.*/, restify.serveStatic({
+	directory: __dirname
+}));
+
 server.get("/token", log, generateToken);
 
 server.post("/token", log, function(req, res, next) {

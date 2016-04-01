@@ -16,6 +16,7 @@
     "gulp-less": "^3.0.5",
     "gulp-notify": "^2.2.0",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "gulp-watch": "^4.3.5",
     "install": "^0.6.0",
     "jsonwebtoken": "^5.7.0",
