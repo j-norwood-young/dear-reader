@@ -12,7 +12,9 @@ Gulp
 
 ### Config
 
-```cp config-example.js config.js```
+```
+cp config-example.js config.js
+```
 
 Change the port, url, username and password to suite.
 
@@ -20,24 +22,34 @@ Change the port, url, username and password to suite.
 
 Install dependencies
 
-```npm install```
+```
+npm install
+```
 
 Build the assets
 
-```gulp```
+```
+gulp
+```
 
 ### Running
 
-```node server.js```
+```
+node server.js
+```
 
 ### Accessing
 
 This should go in your HTML, at the point of scrolling where you want the popup to appear:
 
-```<div id="DearReader" class="dearreader"></div>```
+```
+<div id="DearReader" class="dearreader"></div>
+```
 
 Then, somewhere near the bottom:
 
-```<script src="http://5.9.195.7:8080/public/js/dearreader.min.js"></script>```
+```
+<script src="http://localhost:8080/public/js/dearreader.min.js"></script>
+```
 
 See the testpage.html for an example.
