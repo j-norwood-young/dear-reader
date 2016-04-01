@@ -9,6 +9,26 @@
   "author": "Jason Norwood-Young <jason@10layer.com>",
   "license": "MIT",
   "dependencies": {
-    "restify": "^4.0.4"
+    "cheerio": "^0.20.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-less": "^3.0.5",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-watch": "^4.3.5",
+    "install": "^0.6.0",
+    "jsonwebtoken": "^5.7.0",
+    "mongoose": "^4.4.10",
+    "npm": "^3.8.2",
+    "randomstring": "^1.1.4",
+    "redis": "^2.5.2",
+    "redis-sessions": "^1.0.1",
+    "request": "^2.69.0",
+    "restify": "^4.0.4",
+    "withinviewport": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp-uglify": "^1.5.3"
   }
 }
