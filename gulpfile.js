@@ -3,7 +3,7 @@ var projectName = "dearreader";
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var less = require('gulp-less');
-var notify = require('gulp-notify');
+// var notify = require('gulp-notify');
 var watch = require('gulp-watch');
 var prefix = require('gulp-autoprefixer');
 var browserify = require('gulp-browserify');
@@ -21,14 +21,12 @@ var jsOutputDir = "js/";
 var buildDir = "public/";
 
 
-
 gulp.task('css', function() {
 	return gulp.src([lessInputFile])
 		.pipe(less())
 		.pipe(prefix({ cascade: true }))
 		.pipe(rename(projectName + ".css"))
-		.pipe(gulp.dest(buildDir + cssOutputDir))
-		.pipe(notify({ message: 'Built CSS'}));
+		.pipe(gulp.dest(buildDir + cssOutputDir));
 });
 
 gulp.task('js', function() {
@@ -38,8 +36,7 @@ gulp.task('js', function() {
 		.pipe(gulp.dest(buildDir + jsOutputDir))
 		.pipe(uglify())
 		.pipe(rename(projectName + ".min.js"))
-		.pipe(gulp.dest(buildDir + jsOutputDir))
-		.pipe(notify({ message: 'Built JavaScript'}));
+		.pipe(gulp.dest(buildDir + jsOutputDir));
 });
 
 gulp.task('watch', function() {
