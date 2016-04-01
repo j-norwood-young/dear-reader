@@ -4,13 +4,13 @@ Dear Reader is a platform to build a membership base of supporters for small, in
 
 It is currently under development.
 
-### Requirements
+## Requirements
 
-NodeJS
-MongoDB
-Gulp
+- NodeJS
+- MongoDB
+- Gulp
 
-### Config
+## Config
 
 ```
 cp config-example.js config.js
@@ -18,7 +18,7 @@ cp config-example.js config.js
 
 Change the port, url, username and password to suite.
 
-### Building Assets
+## Building Assets
 
 Install dependencies
 
@@ -32,13 +32,13 @@ Build the assets
 gulp
 ```
 
-### Running
+## Running
 
 ```
 node server.js
 ```
 
-### Accessing
+## Integrating into your site
 
 This should go in your HTML, at the point of scrolling where you want the popup to appear:
 
