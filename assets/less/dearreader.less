@@ -1,0 +1,101 @@
+.close-button {
+		font-family: arial, sans-serif; 
+		font-size: 10px; 
+		border: 1px #000 solid; 
+		background-color: #000; 
+		color: #FFF; 
+		border-radius: 10px; 
+		line-height: 20px; 
+		width: 20px; 
+		height: 20px; 
+		text-align: center; 
+		display: inline-block; 
+		margin-right: 10px; 
+		cursor: pointer;
+	}
+
+#DearReaderAd {
+	.col-left {
+		float: left; 
+		width: 10%; 
+		display: inline-block;
+	}
+
+	.col-mid {
+		float: left; 
+		width: 80%; 
+		display: inline-block;
+	}
+
+	.col-right {
+		float: left; 
+		width: 10%; 
+		display: inline-block; 
+		text-align: right;
+	}
+
+	.kicker {
+		border: 1px #000 solid; 
+		padding: 2px 6px; 
+		border-radius: 12px; 
+		margin-left: 20px; 
+		cursor: pointer;
+		display: inline-block;
+	}
+
+	
+
+	@media only screen and (max-width: 768px) {
+		.kicker {
+			display: block;
+		}
+	}
+}
+
+#DRModal {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background-color: rgba(255, 255, 255, 0.8);
+
+	.dr-modal-content {
+		position: fixed;
+		width: 60vw;
+		height: 70vh;
+		left: 20vw;
+		top: 70px;
+		border: 1px #ccc solid;
+		background-color: #FFF;
+		z-index: 1000;
+		
+		border-radius: 5px;
+		box-shadow: 0px 2px 6px rgba(0,0,0,0.16);
+
+		.dr-modal-header {
+			background-color: #5891D0;
+			position: absolute;
+			width: 100%;
+			min-height: 40px;
+			z-index: 1001;
+			padding: 10px 20px;
+			font-weight: bold;
+			font-size: 12px;
+			color: white;
+			.close-button {
+				position: absolute;
+				right: 5px;
+			}
+		}
+
+		.dr-modal-body {
+			overflow-y: scroll;
+			height: 100%;
+			padding-top: 40px;
+		}
+
+		
+
+	}
+}
