@@ -132,7 +132,7 @@
 			elem.style.boxShadow = "0 0 6px rgba(0,0,0,0.24)";
 			elem.style.padding = "5px";
 			elem.style.position = "fixed";
-			elem.style.bottom = "0px";
+			elem.style.bottom = "-80px";
 			elem.style.right = "0px";
 			elem.style.left = "0px";
 			elem.style.backgroundColor = "#cedff2";
@@ -162,11 +162,13 @@
 	var showing = false;
 	var checkElement = function() {
 		if (elem && !showing) {
+			var h = elem.clientHeight;
+			console.log("clientHeight", h);
 			if (withinviewport(trackElem)) {
 				elem.style.bottom = "0px";
 				showing = true;
 			} else {
-				elem.style.bottom = "-60px";
+				elem.style.bottom = "-80px";
 			}
 		}
 	};
@@ -207,8 +209,10 @@
 			modal.innerHTML = "<div class='dr-modal-content'><div class='dr-modal-header'>" + message.message + " <span id='DRModalClose' class='close-button'>X</span></div><div class='dr-modal-body'>" + html + "</div></div>";
 			hideAdvert();
 			modal.addEventListener("click", function(e) {
-				if (e.target === modal)
+				if (e.target === modal) {
 					closeModal();
+					showAdvert();
+				}
 			});
 			
 			document.body.appendChild(modal);
