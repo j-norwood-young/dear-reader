@@ -30,6 +30,7 @@
     "withinviewport": "^1.0.0"
   },
   "devDependencies": {
+    "gulp-ssh": "^0.5.5",
     "gulp-uglify": "^1.5.3"
   }
 }

@@ -9,6 +9,9 @@ var prefix = require('gulp-autoprefixer');
 var browserify = require('gulp-browserify');
 var uglify = require('gulp-uglify');
 var replace = require('gulp-replace');
+var Gulpssh = require('gulp-ssh');
+var fs = require("fs");
+
 var config = require("./config.js");
 
 var jsInputDir = 'assets/js/**/*.js';
@@ -45,6 +48,24 @@ gulp.task('js', function() {
 gulp.task('watch', function() {
 	gulp.watch(jsInputDir, ['js']);
 	gulp.watch(lessInputDir, ['css']);
+});
+
+gulp.task("deploy", function() {
+	var gulpssh = new Gulpssh({ 
+		ignoreErrors: false,
+		sshConfig: {
+			host: "my.open.co.za",
+			username: "root",
+			port: 22,
+			privateKey: fs.readFileSync("/Users/jason/.ssh/id_rsa")
+		}
+	});
+	return gulpssh
+		.shell([
+			"cd /var/www/dear-reader", "git pull", "npm install --production --silent --color=false -p --progress=false", "gulp js", "supervisorctl restart dear-reader"
+		])
+		.pipe(gulp.dest('logs'))
+		.pipe(notify({ message: "Deployed Production" }));
 });
 
 gulp.task('default', ['js', 'css']);
