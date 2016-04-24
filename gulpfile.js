@@ -54,7 +54,7 @@ gulp.task("deploy", function() {
 	var gulpssh = new Gulpssh({ 
 		ignoreErrors: false,
 		sshConfig: {
-			host: "my.open.co.za",
+			host: "worker.10layer.com",
 			username: "root",
 			port: 22,
 			privateKey: fs.readFileSync("/Users/jason/.ssh/id_rsa")
@@ -62,10 +62,9 @@ gulp.task("deploy", function() {
 	});
 	return gulpssh
 		.shell([
-			"cd /var/www/dear-reader", "git pull", "npm install --production --silent --color=false -p --progress=false", "gulp js", "supervisorctl restart dear-reader"
+			"cd /var/www/dear-reader", "git pull", "npm install --production --silent --color=false -p --progress=false", "gulp js --no-color", "supervisorctl restart dear-reader"
 		])
-		.pipe(gulp.dest('logs'))
-		.pipe(notify({ message: "Deployed Production" }));
+		.pipe(gulp.dest('logs'));
 });
 
 gulp.task('default', ['js', 'css']);
