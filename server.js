@@ -6,6 +6,7 @@ var randomstring = require("randomstring");
 var mongoose   = require('mongoose');
 var request = require("request");
 var cheerio = require("cheerio");
+var md5 = require("md5");
 
 mongoose.connect('mongodb://' + config.mongo.server + '/' + config.mongo.db, function(err) {
     if (err) {
@@ -254,6 +255,26 @@ server.get("/page/sales", log, function(req, res, next) {
 		var $ = cheerio.load(html);
 		var article = $("article");
 		res.send({ status: "ok", data: article.html() });
+	});
+});
+
+server.get("/stats", secure, function(req, res, next) {
+	Log.find().then(function(result) {
+		var count = result.length;
+		var unique = result.map(function(item) {
+			return md5(item.ip_address + item.user_agent);
+		}).reduce(function(previousValue, currentValue, index, context) {
+			if (previousValue.indexOf(currentValue) === -1) {
+				previousValue.push(currentValue);
+			}
+			return previousValue;
+		}, []);
+		var uniqueCount = unique.length;
+		res.send({
+			status: "ok",
+			count: count,
+			uniqueCount: uniqueCount
+		});
 	});
 });
 
