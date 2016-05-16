@@ -62,7 +62,7 @@ gulp.task("deploy", function() {
 	});
 	return gulpssh
 		.shell([
-			"cd /var/www/dear-reader", "git pull", "npm install --production --silent --color=false -p --progress=false", "gulp js --no-color", "supervisorctl restart dear-reader"
+			"cd /var/www/dear-reader", "git pull", "npm install --silent --color=false -p --progress=false", "gulp --no-color", "supervisorctl restart dearreader"
 		])
 		.pipe(gulp.dest('logs'));
 });
