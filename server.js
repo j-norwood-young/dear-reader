@@ -7,6 +7,10 @@ var mongoose   = require('mongoose');
 var request = require("request");
 var cheerio = require("cheerio");
 var md5 = require("md5");
+var Q = require("q");
+var moment = require("moment");
+var async = require("async");
+var payments = require("./payments/payments");
 
 mongoose.connect('mongodb://' + config.mongo.server + '/' + config.mongo.db, function(err) {
     if (err) {
@@ -193,6 +197,7 @@ server.post("/message", secure, log, function(req, res, next) {
 	console.log("Posting to messages", req.body);
 	var message = new Messages();
 	message.message = req.body.message;
+	message.kicker = req.body.kicker;
 	message.start_date = req.body.start_date || null;
 	message.end_date = req.body.end_date || null;
 	message.save()
@@ -258,25 +263,118 @@ server.get("/page/sales", log, function(req, res, next) {
 	});
 });
 
-server.get("/stats", secure, function(req, res, next) {
-	Log.find().then(function(result) {
-		var count = result.length;
-		var unique = result.map(function(item) {
-			return md5(item.ip_address + item.user_agent);
-		}).reduce(function(previousValue, currentValue, index, context) {
-			if (previousValue.indexOf(currentValue) === -1) {
-				previousValue.push(currentValue);
-			}
-			return previousValue;
-		}, []);
-		var uniqueCount = unique.length;
-		res.send({
-			status: "ok",
-			count: count,
-			uniqueCount: uniqueCount
-		});
+var getDateRange = function() {
+	console.time("getDateRange");
+	var start = null;
+	var end = null;
+	return Log.findOne().select("date").sort({ "date": 1 }).exec()
+	.then(function(result) {
+		start = result.date;
+		return Log.findOne().select("date").sort({ "date": -1 }).exec();
+	})
+	.then(function(result) {
+		end = result.date;
+		var diff = moment(end).diff(moment(start), "days");
+		console.timeEnd("getDateRange");
+		return { start: start, end: end, diff: diff };
+	})
+	;
+};
+
+var getDataByDate = function(date) {
+	var mdate = moment(date);
+	console.time("getDataByDate " + date);
+	return Log.find({ 
+		date: { $gte: mdate.format("YYYY-MM-DD"), $lte: mdate.format("YYYY-MM-DD") }
+	}).sort({ "date": 1 }).exec();
+};
+
+var runQueue = function(queue) {
+	var deferred = Q.defer();
+	async.series(queue, function(err, result) {
+		if (err) {
+			console.error(err);
+			return deferred.reject(err);
+		}
+		return deferred.resolve(result);
 	});
+	return deferred.promise;
+};
+
+server.get("/stats", function(req, res, next) {
+	console.time("stats");
+	var o = { limit: 1000 };
+	var count = 0;
+	o.map = function() {
+		emit(this.ip_address + this.user_agent, 1);
+	};
+	o.reduce = function(key, values) {
+		var sum = 0;
+		values.forEach(function(doc) {
+			sum++;
+		});
+		return sum;
+	};
+	var queue = [];
+	getDateRange()
+	.then(function(result) {
+		var range = result;
+		for(var x = 0; x < range.diff; x++) {
+			var date = moment(range.start).add(x, "days");
+			queue.push(function(callback) { //jshint ignore:line
+				return function() { //jshint ignore:line
+					console.log(date);
+					getDataByDate(date)
+					.then(function(result) {
+						var reduced = result.map(function(item) {
+							return md5(item.ip_address + item.user_agent);
+						}).reduce(function(prev, current) {
+							if (!prev[current]) {
+								prev[current] = 1;
+							} else {
+								prev[current]++;
+							}
+							return prev;
+						}, {});
+						var o = {};
+						o[date.format("YYYY-MM-DD")] = reduced;
+						callback(null, o);
+					}, function(err) {
+						callback(err);
+					});
+				};
+			});
+		}
+		queue.splice(0,3); //Testing
+		return runQueue(queue);
+	})
+	.then(function(result) {
+		console.log(result);
+		res.send(result);
+	})
+	.then(null, function(err) {
+		console.error(err);
+		res.send(500, { status: "error", message: err });
+	});
+	// Log.count().then(function(result) {
+	// 	count = result;
+	// 	return Log.mapReduce(o);
+	// }).then(function(unique) {
+	// 	var uniqueCount = unique.length;
+	// 	console.timeEnd("stats");
+	// 	res.send({
+	// 		status: "ok",
+	// 		count: count,
+	// 		uniqueCount: uniqueCount
+	// 	});
+	// }, function(err) {
+	// 	console.error(err);
+	// 	res.send(500, { status: "error", message: err });
+	// });
 });
+
+server.get("/payment", payments.index);
+server.post("/payment/confirm", payments.confirm);
 
 server.listen(config.port, function() {
 	console.log("%s listening at %s", server.name, server.url);
