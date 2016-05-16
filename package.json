@@ -9,6 +9,7 @@
   "author": "Jason Norwood-Young <jason@10layer.com>",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "cheerio": "^0.20.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
@@ -21,13 +22,16 @@
     "install": "^0.6.0",
     "jsonwebtoken": "^5.7.0",
     "md5": "^2.1.0",
+    "moment": "^2.13.0",
     "mongoose": "^4.4.10",
     "npm": "^3.8.2",
+    "q": "^1.4.1",
     "randomstring": "^1.1.4",
     "redis": "^2.5.2",
     "redis-sessions": "^1.0.1",
     "request": "^2.69.0",
     "restify": "^4.0.4",
+    "underscore": "^1.8.3",
     "withinviewport": "^1.0.0"
   },
   "devDependencies": {
