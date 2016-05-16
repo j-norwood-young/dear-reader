@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Dear Reader Payment</title>
+	<link rel="stylesheet" href="/public/dearreader-front.css">
+</head>
+<body>
+	<main id="content">
+		<h1>Thank you for choosing to support independent media</h1>
+		<p>This donation will be shared equally amongst the Free Media Collective, namely GroundUp and Health-e. We are South African indie news sites committed to democracy, independence and free speech.</p>
+		<p><strong>We need your help to keep us free and independent.</strong></p>
+		<p>Please donate an amount of your choice. It costs us R2,000 to produce a single story. If every reader donated R50 a year, we would fully funded.</p>
+		<h2>Pay through Payfast</h2>
+		<div id="payContent">
+			<form id="payForm" action="http://dearreaderserver.dev:8080/payment/confirm" method="POST">
+				<label for="first_name">Your First Name</label>
+				<input type="text" name="first_name" value="Jason">
+				<label for="last_name">Your Last Name</label>
+				<input type="text" name="last_name" value="Norwood-Young">
+				<label for="email_address">Your Email Address</label>
+				<input type="text" name="email_address" value="jason@10layer.com">
+				<label for="amount">How much would you like to donate?</label>
+				ZAR<input type="number" name="amount" value="50">
+				<input id="paySubmit" type="submit" name="submit" value="Donate">
+			</form>
+		</div>
+	</main>
+	<script>
+		(function() {
+			function ajaxFormPost (form, callback) {
+				var url = form.action,
+			    xhr = new XMLHttpRequest();
+
+				//This is a bit tricky, [].fn.call(form.elements, ...) allows us to call .fn
+				//on the form's elements, even though it's not an array. Effectively
+				//Filtering all of the fields on the form
+				var params = [].filter.call(form.elements, function(el) { return !!el.name; }) //Nameless elements die.
+				.filter(function(el) { return !el.disabled; }) //Disabled elements die.
+				.map(function(el) {
+					console.log("El", el);
+				    //Map each field into a name=value string, make sure to properly escape!
+				    return encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value);
+				}).join('&'); //Then join all the strings by &
+				console.log(params);
+				xhr.open("POST", url);
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+				//.bind ensures that this inside of the function is the XHR object.
+				xhr.onload = callback.bind(xhr); 
+
+				//All preperations are clear, send the request!
+				xhr.send(params);
+			}
+
+			var createField = function(type, name, val) {
+				var el = document.createElement("input");
+				el.setAttribute("type", "type");
+				el.setAttribute("name", name);
+				el.setAttribute("value", val);
+				return el;
+			};
+
+			var createHiddenField = function(name, val) {
+				return createField("hidden", name, val);
+			};
+
+			var appendField = function(form, field) {
+				form.appendChild(field);
+			};
+
+			document.getElementById("paySubmit").onclick = function(e) {
+				e.preventDefault();
+				ajaxFormPost(document.getElementById("payForm"), function(e) {
+					var xhr = e.target;
+					console.log(xhr);
+				    if (xhr.responseType === 'json') {
+				        result = xhr.response.message;
+				    } else {
+				        result = JSON.parse(xhr.responseText);
+				    }
+				    var payContent = document.getElementById("payContent");
+				    // payContent.innerHTML = "";
+				    var formEl = document.createElement("form");
+				    formEl.setAttribute("action", result.url);
+				    formEl.setAttribute("method", "POST");
+				    for (var i in result.form) {
+				    	formEl.appendChild(createHiddenField(i, result.form[i]));
+				    }
+				    // s = "<p>You will now be redirected to the Payfast website to complete payment. If you are not redirected, please click submit.<p>";
+				    // payContent.appendChild(s);
+				    // payContent.appendChild(formEl);
+				    // var confirmForm = document.getElementById("confirmPayForm");
+				    formEl.submit();
+				    // console.log(confirmForm);
+				    // confirmForm.submit();
+					// console.log(result);
+				});
+			};
+		})();
+	</script>
+</body>
+</html>
